@@ -158,6 +158,7 @@ const TOOLS: Array<Tool> = [
         name: LanguagePackIdentifiers.TOOL_MATHEMATICA_LICENSE_CRACKER_NAME,
         description: LanguagePackIdentifiers.TOOL_MATHEMATICA_LICENSE_CRACKER_DESCRIPTION,
         pages: [
+            // TODO: support japanese
             (pack) => <MathematicaLicenseCrackerPage1English />,
             (pack) => <MathematicaLicenseCrackerPage2English />,
         ],
