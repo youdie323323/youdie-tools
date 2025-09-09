@@ -3,4 +3,4 @@
 This project provides the tools that improves your QOL. 
 
 Currently implemented tools:
-- **Mathematica keygen**
+- **Mathematica License Cracker**
