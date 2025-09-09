@@ -112,7 +112,7 @@ const MathematicaLicenseCrackerPage2English = () => {
                 }}
                 className={`general-purpose-input`}
             >
-                Crack license
+                Crack License
             </button>
 
             <br />
