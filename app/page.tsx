@@ -47,7 +47,7 @@ function text(pack: LanguagePack, packIdentifier: LanguagePackIdentifiers): stri
     return pack[packIdentifier];
 }
 
-const MathematicaLicenseCrackerPage2English = () => {
+const MathematicaLicenseCrackerPage2 = () => {
     const [expirationDate, setExpirationDate] = useState(new Date());
 
     return (
@@ -86,7 +86,7 @@ const MathematicaLicenseCrackerPage2English = () => {
 
                     const machineId = machineIdInput.value;
                     if (!validateFormat("XXXX-XXXXX-XXXXX", machineId)) { // Validate
-                        alert("Machine Id is not valid");
+                        alert("Machine Id is not valid format");
 
                         return;
                     }
@@ -160,7 +160,7 @@ const TOOLS: Array<Tool> = [
         pages: [
             // TODO: support japanese
             (pack) => <MathematicaLicenseCrackerPage1English />,
-            (pack) => <MathematicaLicenseCrackerPage2English />,
+            (pack) => <MathematicaLicenseCrackerPage2 />,
         ],
     },
 ];
@@ -184,7 +184,7 @@ export default function Root() {
 
     const [descriptionOpenedTools, setDescriptionOpenedTools] = useState<Record<string, boolean>>({});
 
-    const toggleToolDescriptionOpened = (id: string) => {
+    const toggleToolDescriptionOpen = (id: string) => {
         setDescriptionOpenedTools(prev => ({
             ...prev,
             [id]: !prev[id]
@@ -195,13 +195,15 @@ export default function Root() {
         <>
             <div className="flex justify-center items-center min-h-screen">
                 <div className="flex flex-col gap-4 w-full max-w-lg px-4">
+                    <p className="text-4xl" style={{ fontVariant: "small-caps" }}>Tools</p>
+
                     {TOOLS.map(tool => (
                         <div key={tool.id} className="w-full">
                             <div className="flex items-center gap-2 cursor-pointer">
                                 <motion.div
                                     animate={{ rotate: descriptionOpenedTools[tool.id] ? 90 : 0 }}
                                     transition={TOOL_DESCRIPTION_TRANSITION}
-                                    onClick={() => toggleToolDescriptionOpened(tool.id)}
+                                    onClick={() => toggleToolDescriptionOpen(tool.id)}
                                 >
                                     <ChevronRight className="w-5 h-5 text-white" />
                                 </motion.div>

@@ -23,6 +23,11 @@ export function validateFormat(format: string, real: string) {
     return true;
 }
 
+export const CRC_POLYNOMIAL_1: number = 0b1000001011100001 as const;
+export const CRC_POLYNOMIAL_2: number = 0b1000001100100101 as const;
+
+export const INITIAL_CRC: number = 59222 as const;
+
 function updateCRC(polynomial: number, crc: number, byte: number) {
     for (let i = 0; i < 8; i += 1, byte >>= 1) {
         const bit = byte & 1;
@@ -104,9 +109,4 @@ export function generatePassword(encrypted1: number, encrypted2: number) {
         digits1[2] + digits2[0] + "-" + digits2[2] + digits1[4] + digits2[1];
 }
 
-export const CRC_POLYNOMIAL_1: number = 0b1000001011100001 as const;
-export const CRC_POLYNOMIAL_2: number = 0b1000001100100101 as const;
-
 export const MACHINE_NUMBER: string = "800001" as const;
-
-export const INITIAL_CRC: number = 59222 as const;
