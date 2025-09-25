@@ -49,9 +49,10 @@ function findPaddingBytes(polynomial: number, crc: number, target: number) {
 
     for (byte1 = 0; byte1 < 256; byte1++) {
         for (byte2 = 0; byte2 < 256; byte2++) {
-            if (updateCRC(
-                polynomial, updateCRC(polynomial, crc, byte1), byte2) ===
-                target) {
+            if (
+                updateCRC(polynomial, updateCRC(polynomial, crc, byte1), byte2) ===
+                target
+            ) {
                 return byte1 | byte2 << 8;
             }
         }
@@ -107,6 +108,29 @@ export function generatePassword(encrypted1: number, encrypted2: number) {
 
     return "" + digits2[3] + digits1[3] + digits1[1] + digits1[0] + "-" + digits2[4] +
         digits1[2] + digits2[0] + "-" + digits2[2] + digits1[4] + digits2[1];
+}
+
+export function generateActivatableCiphers(machineId: string, expirationDate: Date): [string, string] {
+    const expirationDateFinalized = 1e4 * expirationDate.getFullYear() + 1e2 * (expirationDate.getMonth() + 1) + expirationDate.getDate();
+
+    const activationKey = generateRandomString("xxxx-xxxx-aaaaaa");
+
+    const cipherText = `${machineId}@${expirationDateFinalized}$${MACHINE_NUMBER}&${activationKey}`;
+    const cipherCharCodesReversed = [...String(cipherText)].reverse().map((c) => c.charCodeAt(0));
+
+    let crc = INITIAL_CRC;
+
+    const encryptedValue1 = encrypt(CRC_POLYNOMIAL_1, crc, cipherCharCodesReversed);
+    const finalizedEncryptedValue1 = (encryptedValue1 + 0x72FA) % 65536;
+
+    crc = encodeNumberToCRC(CRC_POLYNOMIAL_2, finalizedEncryptedValue1);
+
+    const encryptedValue2 = encrypt(CRC_POLYNOMIAL_2, crc, cipherCharCodesReversed);
+
+    return [
+        activationKey,
+        `${generatePassword(finalizedEncryptedValue1, encryptedValue2)}::${MACHINE_NUMBER}:${expirationDateFinalized}`,
+    ];
 }
 
 export const MACHINE_NUMBER: string = "800001" as const;

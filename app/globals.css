@@ -14,14 +14,26 @@ body::-webkit-scrollbar,
     display: none;
 }
 
+* {
+    -ms-overflow-style: none;  /* IE, Edge */
+    scrollbar-width: none;     /* Firefox */
+}
+
 /* Current button does not changes cursor style when hovered/focused, so we'll do that voluntary */
 button, input {
     cursor: pointer !important;
 }
 
 /* Disable user select */
-body:not(input):not(select) {
-    user-select: none !important;
+* {
+    user-select: none;
+}
+
+input,
+select,
+.copyable,
+.copyable * {
+    user-select: text !important;
 }
 
 .general-purpose-input {

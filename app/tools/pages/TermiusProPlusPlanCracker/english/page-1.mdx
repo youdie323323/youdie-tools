@@ -1,0 +1,90 @@
+<p className="text-6xl" style={{ fontVariant: "small-caps" }}>Requirements</p>
+
+<hr style={{ margin: "10px 0", border: "none", borderTop: "1px solid #ffffff" }} />
+
+<em>
+ • Windows 11 (may work on other environments, but path is different, so you need to figure it out) <br/>
+ • <a href="https://termius.com/download/windows" target="_blank" className="text-blue-600 hover:underline">Termius</a>, recommending latest version (tested on 9.31.5, Windows 11) <br/>
+ • <a href="https://nodejs.org/en/" target="_blank" className="text-blue-600 hover:underline">Node.js</a> for using asar package (please install it by stepping <a href="https://www.npmjs.com/package/@electron/asar" target="_blank" className="text-blue-600 hover:underline">original package instruction</a>)
+</em>
+
+<p className="text-5xl mt-8" style={{ fontVariant: "small-caps" }}>Steps</p>
+
+<hr style={{ margin: "10px 0", border: "none", borderTop: "1px solid #ffffff" }} />
+
+First, ensure that any paid plan is not activated.
+
+<br/>![Home](pages/TermiusProPlusPlanCracker/english/images/1.png) <br/>
+
+Click <i>Hamburger Menu</i> on top left, and click <i>"Settings"</i>.
+
+<br/>![Home](pages/TermiusProPlusPlanCracker/english/images/2.png) <br/>
+
+As you can see, current plan is <i>Trial</i>, so let activate paid plan. <br/>
+Close termius, and then press "Win + r", copy and paste this:
+
+<div className="block text-center my-4 copyable">
+    %LocalAppData%\Programs\Termius\resources
+</div>
+
+This will open a explorer, type <i>"cmd"</i> on upper box.
+
+<br/>![Home](pages/TermiusProPlusPlanCracker/english/images/3.png) <br/>
+
+Press enter and <i>command prompt</i> will appear. <br/>
+Run following commands:
+
+<div className="block text-center my-4 copyable">
+    asar extract app.asar app.asar.unpacked.own <br/>
+    xcopy /E /I /Y app.asar.unpacked app.asar.unpacked.own <br/>
+    ren app.asar app-original.asar <br/>
+    del app-update.yml <br/>
+</div>
+
+Back to <i>file explorer</i> again.
+
+<br/>![Home](pages/TermiusProPlusPlanCracker/english/images/4.png) <br/>
+
+Open <i>"app.asar.unpacked.own -> background-process -> assets"</i>. <br/>
+There is a file named <i>"main-*.js"</i> (\* is random string) on current folder, open that with <i>notepad</i>.
+
+<br/>![Home](pages/TermiusProPlusPlanCracker/english/images/5.png) <br/>
+
+Search and replace 
+
+<div className="block text-center my-4 copyable">
+    bulkAccount()\{return this.get(_t.bulkAccount)\}
+</div>
+
+with
+
+<div className="relative border-1 border-white rounded-lg p-5 mt-4 mb-4">
+    <span className="absolute -top-3 left-4 bg-black px-2 text-white">
+        Pro plan
+    </span>
+    <pre className="overflow-x-auto whitespace-pre text-white font-mono text-m copyable">
+        {`async bulkAccount(){const e=(new Date).toISOString().slice(0,-5);return{account:{authorized_features:{show_trial_section:!1,show_subscription_section:!0,show_github_account_section:!1},pro_mode:!0,need_to_update_subscription:!1,current_period:{from:"2025-09-24T16:10:21",until:"2099-01-01T00:00:00"},plan_type:"Premium",user_type:"Premium",expired_screen_type:null},student:null,trial:null,personal_subscription:{now:e,status:"SUCCESS",platform:"stripe",current_period:{from:"2025-09-24T16:10:21",until:"2099-01-01T00:00:00"},revokable:!0,refunded:!1,cancelable:!0,reactivatable:!1,currency:"usd",created_at:"2025-09-24T16:10:21",updated_at:e,valid_until:"2099-01-01T00:00:00",auto_renew:!0,price:12,verbose_plan_name:"Termius Pro Monthly",plan_type:"SINGLE",is_expired:!1},access_objects:[{period:{start:"2025-09-24T16:10:21",end:"2099-01-01T00:00:00"},title:"Pro"}]}}`}
+    </pre>
+</div>
+
+or if you want to use <i>business plan</i>:
+
+<div className="relative border-1 border-white rounded-lg p-5 mt-4 mb-4">
+    <span className="absolute -top-3 left-4 bg-black px-2 text-white">
+        Business plan
+    </span>
+    <pre className="overflow-x-auto whitespace-pre text-white font-mono text-m copyable">
+        {`async bulkAccount(){const e=(new Date).toISOString().slice(0,-5);return{account:{authorized_features:{show_trial_section:!1,show_subscription_section:!0,show_github_account_section:!1},pro_mode:!0,need_to_update_subscription:!1,current_period:{from:"2025-09-24T16:10:21",until:"2099-01-01T00:00:00"},plan_type:"Premium",user_type:"Premium",expired_screen_type:null},student:null,trial:null,personal_subscription:{now:e,status:"SUCCESS",platform:"stripe",current_period:{from:"2025-09-24T16:10:21",until:"2099-01-01T00:00:00"},revokable:!0,refunded:!1,cancelable:!0,reactivatable:!1,currency:"usd",created_at:"2025-09-24T16:10:21",updated_at:e,valid_until:"2099-01-01T00:00:00",auto_renew:!0,price:360,verbose_plan_name:"Termius Business Monthly",plan_type:"TEAM_BUSINESS",is_expired:!1},access_objects:[{period:{start:"2025-09-24T16:10:21",end:"2099-01-01T00:00:00"},title:"Business"}]}}`}
+    </pre>
+</div>
+
+Save and close, then back to command prompt again. <br/>
+Run following command:
+
+<div className="block text-center my-4 copyable">
+    asar pack app.asar.unpacked.own app.asar --unpack-dir "\{node_modules,out\}" --exclude-hidden
+</div>
+
+Open termius and you got the plan that you chose.
+
+<br/>![Home](pages/TermiusProPlusPlanCracker/english/images/6.png)

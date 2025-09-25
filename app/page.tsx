@@ -8,9 +8,10 @@ import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
 
-import MathematicaLicenseCrackerPage1English from "./tools/pages/english/mathematica-license-cracker-page-1.mdx";
+import MathematicaLicenseCrackerPage1English from "./tools/pages/MathematicaLicenseCracker/english/page-1.mdx";
+import TermiusProPlusPlanCrackerPage1English from "./tools/pages/TermiusProPlusPlanCracker/english/page-1.mdx";
 
-import { generateRandomString, MACHINE_NUMBER, encrypt, CRC_POLYNOMIAL_1, encodeNumberToCRC, CRC_POLYNOMIAL_2, generatePassword, INITIAL_CRC, validateFormat } from "./tools/MathematicaLicenseCracker";
+import { validateFormat, generateActivatableCiphers } from "./tools/MathematicaLicenseCracker";
 
 const enum Language {
     ENGLISH,
@@ -20,6 +21,9 @@ const enum Language {
 const enum LanguagePackIdentifiers {
     TOOL_MATHEMATICA_LICENSE_CRACKER_NAME,
     TOOL_MATHEMATICA_LICENSE_CRACKER_DESCRIPTION,
+
+    TOOL_TERMIUS_PRO_PLUS_PLAN_CRACKER_NAME,
+    TOOL_TERMIUS_PRO_PLUS_PLAN_CRACKER_DESCRIPTION,
 }
 
 type LanguagePack = {
@@ -28,12 +32,18 @@ type LanguagePack = {
 
 const LANGUAGE_PACK_ENGLISH: LanguagePack = {
     [LanguagePackIdentifiers.TOOL_MATHEMATICA_LICENSE_CRACKER_NAME]: "Mathematica License Cracker",
-    [LanguagePackIdentifiers.TOOL_MATHEMATICA_LICENSE_CRACKER_DESCRIPTION]: "This tool cracks mathematica license",
+    [LanguagePackIdentifiers.TOOL_MATHEMATICA_LICENSE_CRACKER_DESCRIPTION]: "This tool cracks Mathematica license",
+
+    [LanguagePackIdentifiers.TOOL_TERMIUS_PRO_PLUS_PLAN_CRACKER_NAME]: "Termius Pro Plus Plan Cracker",
+    [LanguagePackIdentifiers.TOOL_TERMIUS_PRO_PLUS_PLAN_CRACKER_DESCRIPTION]: "This tool cracks Termius pro+ plan",
 };
 
 const LANGUAGE_PACK_JAPANESE: LanguagePack = {
     [LanguagePackIdentifiers.TOOL_MATHEMATICA_LICENSE_CRACKER_NAME]: "Mathematica ライセンスクラッカー",
-    [LanguagePackIdentifiers.TOOL_MATHEMATICA_LICENSE_CRACKER_DESCRIPTION]: "このツールはMathematicaのライセンスを割ります",
+    [LanguagePackIdentifiers.TOOL_MATHEMATICA_LICENSE_CRACKER_DESCRIPTION]: "このツールを使うことにより、Mathematicaのライセンスを割ることができます",
+
+    [LanguagePackIdentifiers.TOOL_TERMIUS_PRO_PLUS_PLAN_CRACKER_NAME]: "Termius Pro+プラン クラッカー",
+    [LanguagePackIdentifiers.TOOL_TERMIUS_PRO_PLUS_PLAN_CRACKER_DESCRIPTION]: "このツールを使うことにより、Termiusのプロ以上のプランを無料で取得することができます",
 };
 
 function languageToLanguagePack(language: Language): LanguagePack {
@@ -81,6 +91,7 @@ const MathematicaLicenseCrackerPage2 = () => {
             <button
                 onClick={() => {
                     const machineIdInput = document.getElementById("machine-id-input") as HTMLInputElement;
+
                     const activationKeyInput = document.getElementById("activation-key-input") as HTMLInputElement;
                     const passwordInput = document.getElementById("password-input") as HTMLInputElement;
 
@@ -91,24 +102,7 @@ const MathematicaLicenseCrackerPage2 = () => {
                         return;
                     }
 
-                    const expirationDateFinalized = 1e4 * expirationDate.getFullYear() + 1e2 * (expirationDate.getMonth() + 1) + expirationDate.getDate();
-
-                    const activationKey = generateRandomString("xxxx-xxxx-aaaaaa");
-
-                    const cipherText = `${machineId}@${expirationDateFinalized}$${MACHINE_NUMBER}&${activationKey}`;
-                    const cipherCharCodesReversed = [...String(cipherText)].reverse().map((c) => c.charCodeAt(0));
-
-                    let crc = INITIAL_CRC;
-
-                    const encryptedValue1 = encrypt(CRC_POLYNOMIAL_1, crc, cipherCharCodesReversed);
-                    const finalizedEncryptedValue1 = (encryptedValue1 + 0x72FA) % 65536;
-
-                    crc = encodeNumberToCRC(CRC_POLYNOMIAL_2, finalizedEncryptedValue1);
-
-                    const encryptedValue2 = encrypt(CRC_POLYNOMIAL_2, crc, cipherCharCodesReversed);
-
-                    activationKeyInput.value = activationKey;
-                    passwordInput.value = `${generatePassword(finalizedEncryptedValue1, encryptedValue2)}::${MACHINE_NUMBER}:${expirationDateFinalized}`;
+                    [activationKeyInput.value, passwordInput.value] = generateActivatableCiphers(machineId, expirationDate)
                 }}
                 className={`general-purpose-input`}
             >
@@ -163,6 +157,15 @@ const TOOLS: Array<Tool> = [
             (pack) => <MathematicaLicenseCrackerPage2 />,
         ],
     },
+    {
+        id: "termius-pro-plus-plan-cracker",
+        name: LanguagePackIdentifiers.TOOL_TERMIUS_PRO_PLUS_PLAN_CRACKER_NAME,
+        description: LanguagePackIdentifiers.TOOL_TERMIUS_PRO_PLUS_PLAN_CRACKER_DESCRIPTION,
+        pages: [
+            // TODO: support japanese
+            (pack) => <TermiusProPlusPlanCrackerPage1English />,
+        ],
+    },
 ];
 
 const TOOL_DESCRIPTION_TRANSITION: Transition<any> = {
@@ -180,7 +183,12 @@ export default function Root() {
     const [openedTool, setOpenedTools] = useState<Tool | null>(null);
     const [toolWindowPageNumber, setToolWindowPageNumber] = useState<number>(1);
 
-    const closeToolWindow = () => setOpenedTools(null);
+    const closeToolWindow = () => {
+        setOpenedTools(null);
+
+        // If a user moves to page 2 or beyond in the previous tool, opening a new tool that has only one page will cause an index error
+        setToolWindowPageNumber(1);
+    };
 
     const [descriptionOpenedTools, setDescriptionOpenedTools] = useState<Record<string, boolean>>({});
 
@@ -252,7 +260,7 @@ export default function Root() {
 
                     <div className="text-sm text-gray-400 text-center">
                         <p>© 2025 Koki Sato. All rights reserved.</p>
-                        <p>Found a bug? Please <a href="https://github.com/youdie323323/youdie-tools/issues" className="underline hover:text-gray-300">report it on GitHub</a>.</p>
+                        <p>Found a bug? Please <a href="https://github.com/youdie323323/youdie-tools/issues" className="underline hover:text-gray-300">issue it on GitHub</a>.</p>
                     </div>
                 </div>
             </div>
