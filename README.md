@@ -4,5 +4,6 @@ This project provides the tools that improves your QOL.
 
 Currently implemented tools:
 - **Mathematica License Cracker**
+- **Termius Pro+ Plan Cracker**
 
 ### Website: https://youdie-tools.vercel.app
