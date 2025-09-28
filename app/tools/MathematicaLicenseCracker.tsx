@@ -88,16 +88,15 @@ export function encodeNumberToCRC(polynomial: number, number: number) {
         updateCRC(polynomial, 0, scaledNumber & 0xFF), scaledNumber >> 8);
 }
 
-function splitToDigits(value: number) {
-    let number = Math.floor(value * 99999 / 0xFFFF);
+function splitToDigits(value: number): Array<number> {
+    const digits = new Array<number>();
 
-    const digits = [];
-
-    for (let i = 0; i < 5; i++) {
+    for (
+        let i = 0, number = Math.floor(value * 99999 / 0xFFFF);
+        i < 5;
+        i++, number = Math.floor(number / 10)
+    )
         digits.push(number % 10);
-
-        number = Math.floor(number / 10);
-    }
 
     return digits;
 }
