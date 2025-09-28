@@ -5,6 +5,8 @@ import { motion, AnimatePresence, Transition } from "framer-motion";
 import { useState, ReactNode } from "react";
 import Modal from "react-modal";
 
+import AnimatedButtonGroup, { Option as AnimatedButtonOption } from "./Components/AnimatedButtonGroup";
+
 import MathematicaLicenseCrackerPage1English from "./tools/MathematicaLicenseCrackerPage1English.mdx";
 import MathematicaLicenseCrackerPage2English from "./tools/MathematicaLicenseCrackerPage2English";
 
@@ -158,19 +160,15 @@ export default function Root() {
                 </div>
 
                 <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-4">
-                    <div className="flex gap-4">
-                        <button
-                            onClick={() => setLanguage(Language.ENGLISH)}
-                            className={`general-purpose-input ${language === Language.ENGLISH ? "general-purpose-input-selected" : ""}`}
-                        >
-                            English
-                        </button>
-                        <button
-                            onClick={() => setLanguage(Language.JAPANESE)}
-                            className={`general-purpose-input ${language === Language.JAPANESE ? "general-purpose-input-selected" : ""}`}
-                        >
-                            日本語
-                        </button>
+                    <div className="relative flex gap-4">
+                        <AnimatedButtonGroup
+                            options={[
+                                { label: "English", value: Language.ENGLISH },
+                                { label: "日本語", value: Language.JAPANESE },
+                            ]}
+                            selected={language}
+                            onChange={setLanguage}
+                        />
                     </div>
 
                     <div className="text-sm text-gray-400 text-center">
@@ -222,20 +220,16 @@ export default function Root() {
                     </div>
                 )}
 
-                <div className="flex gap-4">
-                    {openedTool?.pages.map((page, i) => {
-                        const pageNumber = i + 1;
+                <div className="relative flex gap-4">
+                    {openedTool && <AnimatedButtonGroup
+                        options={openedTool.pages.map((page, i) => {
+                            const pageNumber = i + 1;
 
-                        return (
-                            <button
-                                key={pageNumber}
-                                onClick={() => setToolWindowPageNumber(pageNumber)}
-                                className={`general-purpose-input ${toolWindowPageNumber === pageNumber ? "general-purpose-input-selected" : ""}`}
-                            >
-                                Page {pageNumber}
-                            </button>
-                        );
-                    })}
+                            return { label: `Page ${pageNumber}`, value: pageNumber } satisfies AnimatedButtonOption<number>;
+                        })}
+                        selected={toolWindowPageNumber}
+                        onChange={setToolWindowPageNumber}
+                    />}
                 </div>
 
                 <div className="w-full h-px bg-white my-2"></div>
